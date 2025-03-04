@@ -11,3 +11,7 @@
 
 1: to create model:=> npx sequelize model:generate --name Booking --attributes flightId:integer,userId:integer,status:enum,noOfSeats:integer,totalCost:integer
 
+2: add booking model to databasse:=> npx sequelize db:migrate
+
+3: create booking-repository.js and crud-repository.js
+
