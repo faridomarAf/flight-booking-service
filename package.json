@@ -1,0 +1,26 @@
+{
+  "name": "v-1",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon src/index.js"
+  },
+  "keywords": [],
+  "author": "Farid",
+  "license": "ISC",
+  "type": "commonjs",
+  "description": "",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "http-status-codes": "^2.3.0",
+    "i": "^0.3.7",
+    "mysql2": "^3.12.0",
+    "nodemon": "^3.1.9",
+    "npm": "^11.1.0",
+    "sequelize": "^6.37.6",
+    "sequelize-cli": "^6.6.2",
+    "winston": "^3.17.0"
+  }
+}
