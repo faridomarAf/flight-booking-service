@@ -13,5 +13,8 @@
 
 2: add booking model to databasse:=> npx sequelize db:migrate
 
-3: create booking-repository.js and crud-repository.js
 
+//================================== Create booking-route ===================================
+
+. booking route created
+. create paymentRoute. and its logic: done
