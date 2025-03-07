@@ -18,3 +18,7 @@
 
 . booking route created
 . create paymentRoute. and its logic: done
+. NOTE: when the booking is canceled, we shoul bring back the reserved seat to the totalSeats. for that we are going to create a function: 'cancelBooking' to that for us: done
+
+
+
