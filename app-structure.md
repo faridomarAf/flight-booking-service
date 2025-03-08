@@ -27,3 +27,12 @@ In order to do this functionality, we can install  [ npm install node-cron ] whi
 . npm i node-cron installed
 
 
+//================================== Create the payment API idempotent key ===================================
+. what is idempotent key: 
+  An idempotent key ensures that a request is processed only once, even if it is sent multiple times.
+
+. we can add it inside the booking controller
+
+. we created a inmemory-object to store idempotencyKey, and then add our logic to the payment-controller, 
+. note: Better approach is to use inmemory-cach like[redis] or a db-table to store idemptencyKey. cach like redis is faster than database
+
