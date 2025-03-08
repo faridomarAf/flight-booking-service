@@ -1,84 +1,93 @@
-# Node.js Backend Template
+# Booking Service - Flight Booking Application
 
 ## Overview
-This is a Node.js backend application built using Express.js. The project follows a modular structure for scalability and maintainability. It includes configurations, controllers, middlewares, routes, services, and utility functions. Logging is handled using Winston, and environment variables are managed via dotenv.
+The `booking-service` is a microservice within the Flight Booking Application, responsible for handling flight bookings, managing payments, and ensuring seat availability. It is built using Node.js and Express.js, with MySQL as the database and Sequelize as the ORM.
 
 ## Features
-- Express.js server
-- Modular architecture
-- Logging with Winston
-- Environment variable management with dotenv
-- Structured routing
-- Middleware handling
-- Service layer for business logic
-- Utility functions for reusable logic
+- **Express.js server** for handling API requests
+- **Sequelize ORM** for database interactions
+- **MySQL database** for storing booking details
+- **Booking management** with status updates
+- **Payment processing** with idempotency key handling
+- **Seat availability validation** to prevent overbooking
+- **Automated cleanup** of unpaid bookings using cron jobs
+- **Logging with Winston** for debugging and monitoring
 
-## Project Structure
+## Environment Variables
+Ensure you have a `.env` file with the following variables:
 ```
-v-1/
-├── node_modules/           # Dependencies
-├── src/                    # Source code
-│   ├── config/             # Configuration files
-│   │   ├── index.js        # Central config file
-│   │   ├── logger-config.js # Logging setup with Winston
-│   │   ├── server-config.js # Server-specific configuration
-│   ├── controllers/        # Controllers handling request logic
-│   │   ├── index.js        # Centralized controller exports
-│   │   ├── info-controller.js # Example controller for handling info routes
-│   ├── middlewares/        # Express middlewares
-│   │   ├── index.js        # Middleware exports
-│   ├── routes/             # API routes
-│   │   ├── v1/             # Versioned routes (v1)
-│   │   │   ├── index.js    # API endpoints for v1
-│   ├── services/           # Business logic and service layer
-│   │   ├── index.js        # Service exports
-│   ├── utils/              # Utility functions
-│   │   ├── index.js        # Helper functions
-│   ├── index.js            # Entry point of the application
-├── .env                    # Environment variables
-├── .gitignore              # Ignored files for Git
-├── combined.log            # Log file
-├── package.json            # Project metadata and dependencies
-├── package-lock.json       # Dependency lock file
+PORT=4000
+FLIGHT_SERVICE='http://localhost:3500'
 ```
 
 ## Installation
 ### Prerequisites
-Ensure you have Node.js installed on your machine.
+- Node.js installed on your machine
+- MySQL database running
 
 ### Steps
 1. Clone the repository:
    ```sh
-   git clone <repository-url>
-   cd v-1
+   git clone <https://github.com/faridomarAf/flight-booking-service.git>
+   cd booking-service
    ```
 2. Install dependencies:
    ```sh
    npm install
    ```
-3. Create a `.env` file in the root directory and define necessary environment variables.
+3. Initialize Sequelize:
+   ```sh
+   npx sequelize init
+   ```
+4. Create the `Booking` model:
+   ```sh
+   npx sequelize model:generate --name Booking --attributes flightId:integer,userId:integer,status:enum,noOfSeats:integer,totalCost:integer
+   ```
+5. Run database migrations:
+   ```sh
+   npx sequelize db:migrate
+   ```
 
 ## Usage
 ### Development Mode
-To start the server in development mode with hot-reloading:
+To start the server in development mode:
 ```sh
 npm run dev
 ```
 
+## Booking Management
+### Booking Creation
+- Users can book a flight by providing flight details, number of seats, and payment confirmation.
+- Seat availability is validated before confirming a booking.
+
+### Booking Cancellation
+- If a booking is canceled, the reserved seats are returned to the available seats in the flight.
+- A function `cancelBooking` is implemented to handle this logic.
+
+### Automatic Cleanup for Unpaid Bookings
+- If a booking is **initiated but not paid within 5 minutes**, it is automatically canceled.
+- To achieve this, `node-cron` is used to schedule a task that checks and cancels such bookings every 5 minutes.
+- Install `node-cron`:
+  ```sh
+  npm install node-cron
+  ```
+
+## Payment Handling
+### Idempotent Key for Payments
+- An **idempotent key** ensures that a payment request is processed only once, even if sent multiple times.
+- A temporary in-memory object is used to store `idempotencyKey` in the `payment-controller`.
+- A better approach is to use **Redis** or a **database table** for storing `idempotencyKey`.
+
 ## Dependencies
-- `express`: Web framework for Node.js
-- `dotenv`: Environment variable management
-- `winston`: Logging library
-- `http-status-codes`: Standard HTTP status codes
-- `nodemon`: Development tool for auto-restarting the server
-
-## Contributing
-1. Fork the repository
-2. Create a new branch (`git checkout -b feature-branch`)
-3. Commit your changes (`git commit -m "Add new feature"`)
-4. Push to the branch (`git push origin feature-branch`)
-5. Open a pull request
-
+- `express` - Web framework for Node.js
+- `dotenv` - Environment variable management
+- `winston` - Logging library
+- `http-status-codes` - Standard HTTP status codes
+- `mysql2` - MySQL database driver
+- `sequelize` - ORM for MySQL
+- `sequelize-cli` - CLI tool for managing Sequelize
+- `node-cron` - Task scheduling for automatic cleanup
+- `axios` - HTTP client for external API calls
 
 ## Author
 **Farid**
